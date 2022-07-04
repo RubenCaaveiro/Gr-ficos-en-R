@@ -1,0 +1,27 @@
+library(lidR)
+
+path_las <- "C:\\00001_MASTER_SIG\\MODULO_3\\TFM\\MATERIALES Y METODOS\\DATOS\\VUELO_DRON_La_Solana\\PRUEBA_2_SUR\\2_densification\\point_cloud\\Recortes_individuales"
+
+lista_las <-list("Recortes_individuales")
+name_las <- 'classify_las'
+
+for(i in lista_las){
+  
+    setwd(paste0(path_las))
+    dir.salida<-paste0("C:\\00001_MASTER_SIG\\MODULO_3\\TFM\\MATERIALES Y METODOS\\DATOS\\VUELO_DRON_La_Solana\\PRUEBA_2_SUR\\2_densification\\point_cloud\\OUTPUT_las\\")
+   
+    files.entrada <- list.files(pattern=".las", full.names = TRUE)                 
+    print(files.entrada)
+    
+    las_N <- readLAS(files.entrada) 
+    las <- classify_noise(las_N, sor(15,7))
+    las_denoise <- filter_poi(las, Classification != LASNOISE)
+    plot(las_denoise)
+    
+    writeLAS(las_denoise,
+                paste0(dir.salida,"_",name_las,'_',
+                       as.array(length(lista_las)),'.las'))
+  
+}
+
+beepr::beep(2)
